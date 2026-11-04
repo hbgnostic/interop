@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "vela-0.1.0-oci",
+  "program": "ISI-4@1.0.0",
+  "itcve": "ITCVE-1@1.0.0",
+  "claim": "VENDOR_SUBMITTED_CANDIDATE",
+  "vendor": {
+    "name": "Bridget Doran",
+    "github": "hbgnostic",
+    "submissionTerms": "legal/ARTIFACT-SUBMISSION-AGREEMENT.md@2.2.0",
+    "acceptance": "Pull request adding this record"
+  },
+  "artifact": {
+    "kind": "oci-image",
+    "reference": "ghcr.io/hbgnostic/vela-wallet:0.1.0-ff2dbe1",
+    "visibility": "public",
+    "indexDigest": "sha256:b62bef87363ca58ae1f7add6bc43d7e22a55f2aaccfa5ca0b085e9628495c47b",
+    "platforms": [
+      { "platform": "linux/amd64", "manifestDigest": "sha256:7ad4a6961f6060a7752275344e51f9c9d34f6d206a23cf0bc7a345bbc10c98a6" },
+      { "platform": "linux/arm64", "manifestDigest": "sha256:0cda398395696e4fff4d67cdc79a9712ca326308a02fb29a1a5a5b2f382c55c5" }
+    ],
+    "source": "not public",
+    "walletLibraries": { "@bsv/sdk": "4.0.1", "@bsv/wallet-toolbox": "2.15.1" },
+    "baseImage": "node:22-slim"
+  },
+  "dependencyLicenses": {
+    "npmPackages": 298,
+    "permissive": 286,
+    "openBsvLicense": {
+      "count": 12,
+      "packages": ["@bsv/* (Open BSV License v6)", "@bopen-io/templates (Open BSV License v4)"]
+    },
+    "baseImage": "Debian packages under their own licenses"
+  },
+  "interfaces": {
+    "brc100Http": { "port": 3321, "bind": "configurable; published to 127.0.0.1 in the documented run" },
+    "dashboard": { "port": 3400, "auth": "VELA_DASHBOARD_KEY via ?key= or x-api-key" }
+  },
+  "configuration": {
+    "required": ["WALLET_STORAGE_URL", "VELA_DASHBOARD_KEY"],
+    "optional": ["WALLET_SEED", "CHAIN", "WALLET_SUBSTRATE_ORIGINS", "WALLET_SUBSTRATE_ENFORCE_SPENDING", "WALLET_SUBSTRATE_PER_APP_IDENTITY", "BLOCK_HEADERS_URL", "ARC_API_KEY"],
+    "storage": "remote BRC-100 StorageServer only; no local fallback",
+    "initialization": "setup page: create (24-word phrase) or restore (24 words or 64-hex seed); seed encrypted at rest (scrypt, AES-256-GCM), unlocked by password; WALLET_SEED skips setup"
+  },
+  "permissionModel": {
+    "prompts": false,
+    "connect": "exact origin allowlist (App Access); unlisted origins receive no CORS grant and are logged as blocked",
+    "spend": "BRC-73 monthly spending authorizations per site",
+    "coinProtocolSigning": "refused unless the origin is on WALLET_SUBSTRATE_ORIGINS (empty by default)",
+    "driverApi": ["POST /api/access/add", "POST /api/access/remove", "POST /api/permissions/grant", "GET /api/permissions"]
+  },
+  "documentation": "suts/candidates/vela-0.1.0-README.md",
+  "knownLimitations": [
+    "No built-in PeerPay or MessageBox inbox",
+    "App Access list and per-app identity choices are local to the /data volume",
+    "Recovery phrase restores in Vela; root key is HMAC-SHA256(seed, \"IDENTITY_KEY_V1\")"
+  ],
+  "admission": {
+    "status": "not-admitted",
+    "reason": "Intake review under docs/intake.md has not started; no execution lane yet covers a container serving the BRC-100 HTTP interface on port 3321."
+  }
+}
