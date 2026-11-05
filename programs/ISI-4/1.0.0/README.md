@@ -17,6 +17,10 @@ The initial environment supplies controlled services and isolated fixtures. It d
 
 The [catalog](catalog.json) marks V001–V006 executable. V007 awaits the ISI-3 multi-remote replacement profile, and V008 awaits the remaining clause-level BRC-100 fixtures. Every run still reports all eight outcomes so incomplete coverage remains explicit.
 
+The optional [payment journey proposal](../proposals/payment-journeys/0.1.0/README.md)
+extends coverage planning to native Send/Receive, PeerPay and Mountaintops.
+Its source regressions and unexecuted native matrix have separate claim boundaries.
+
 ## Acceptance and fidelity
 
 Admission follows [production SUT intake](../../../docs/intake.md). Adapters implement the laboratory lifecycle and drive the SUT's ordinary interfaces. Supported endpoint choices are recorded as configuration, with their effect on behavior assessed. No special wallet API, build, or regtest mode is required.

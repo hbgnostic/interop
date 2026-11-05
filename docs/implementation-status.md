@@ -8,6 +8,7 @@
 | Portable laboratory qualification execution | Implemented for canonical web-root extraction, logical-origin serving, HTTP assertions, raw evidence retention, and offline verification |
 | Native macOS qualification execution | Implemented on clean hosted Apple-silicon macOS VMs; two retained BSV Desktop repetitions pass installation, initialization, mainnet-mode, and local BRC-100 bridge assertions |
 | BRC-38/39 file portability | [Proposed profile](../programs/ISI-4/proposals/brc39-file-portability-0.1.0.md) and pinned synthetic envelope oracle; native cross-wallet matrix remains unexecuted and adopted V007 remains blocked |
+| Native Send/Receive, PeerPay and Mountaintops | [Payment journey proposal](payment-journeys.md), deterministic coverage inventory and executable pinned application source regressions. Native payment UI drivers, controlled Message Box faults, independent outcomes and wallet payment-profile admission remain open; source checks issue infrastructure findings only |
 | ISI requirement catalogs and machine-readable vector plans | Four versioned catalogs; ISI-4 V001–V006 are executable for conforming drivers, while V007–V008 retain explicit blockers |
 | Four ISI reports on admitted SUTs | First ISI-4 experimental result retained; ISI-1, ISI-2, and ISI-3 SUT reports remain pending |
 | Teranode regtest closure and mining | Implemented with pinned source and image digests; real PushDrop post and revision spends, conflict rejection, deterministic mining, retrieval, and full-stack restart recovery retain passing evidence |

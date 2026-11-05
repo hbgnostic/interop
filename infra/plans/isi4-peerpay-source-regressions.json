@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "ISI4-PEERPAY-SOURCE-REGRESSIONS-20261105",
+  "claim": "INFRASTRUCTURE_QUALIFICATION_ONLY",
+  "source": {
+    "repository": "https://github.com/p2ppsr/peerpay.git",
+    "commit": "bbb51f392be985e63780ff3ae1977b86cbf08f6c"
+  },
+  "command": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "await import(process.env.TPNIL_PAYMENT_SOURCE_RUNNER)"
+  ],
+  "environment": {
+    "TPNIL_PAYMENT_LANE": "peerpay",
+    "TPNIL_PAYMENT_SOURCE_RUNNER": "${LAB_ROOT}/infra/payments/source-regression.mjs",
+    "TPNIL_PAYMENT_REPORT_VERIFIER": "${LAB_ROOT}/src/payment-source-results.mjs"
+  },
+  "inputs": [
+    {
+      "environment": "TPNIL_PAYMENT_SOURCE_RUNNER",
+      "sha256": "f9b139e286e2698276da5ef4b860b7a41551d4e07007784edfcef5fb7dfb11a3",
+      "purpose": "Clean locked install, complete source test execution, named regression and no-skip verification"
+    },
+    {
+      "environment": "TPNIL_PAYMENT_REPORT_VERIFIER",
+      "sha256": "22920b0bffb83e63074c7662029cb982a084f42dda0ef3507ee39afbe4661bf8",
+      "purpose": "No-skip and named-regression result verification"
+    }
+  ],
+  "timeoutSeconds": 600,
+  "requiredOutput": [
+    "TPNIL_PAYMENT_SOURCE_PEERPAY_PASS",
+    "\"nativeWalletExecution\":false"
+  ]
+}

@@ -17,6 +17,8 @@ The Chromium, macOS and Android lanes are executable. Yours Wallet has two retai
 
 Next steps:
 
+- Reproduce missing identity-key payments on the reported Windows receiving path under the [payment journey proposal](programs/ISI-4/proposals/payment-journeys/0.1.0/README.md). Add native/PeerPay ordered-pair flows and Mountaintops deposit/import/recovery; retain transaction, discovery, inbox, internalization and UX observations independently. Source checks and an unexecuted matrix are available through the [operator guide](docs/payment-journeys.md).
+
 - Diagnose the Metanet Explorer response boundary using the retained [storage and bridge observations](programs/ISI-4/decisions/0007-controlled-wallet-bridge-observation.md).
 - Complete BSV Desktop's supported service configuration, fixture state and independent reconstruction lane.
 - Expand the permission-denial, alternate-origin and broadcast/recovery assertions, remote-storage substitution and clause-level BRC-100 coverage. Preserve the existing results when new cases or corrected runs are added.

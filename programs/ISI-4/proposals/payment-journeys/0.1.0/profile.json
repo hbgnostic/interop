@@ -1,0 +1,378 @@
+{
+  "schema": "tpnil-payment-journeys@0.1.0",
+  "id": "ISI-4-payment-journeys@0.1.0",
+  "status": "PROPOSED",
+  "networkBoundary": "controlled-services-only; no public-mainnet funds or broadcast",
+  "wallets": [
+    {
+      "id": "metanet-client-windows11",
+      "family": "Metanet Client",
+      "platform": "Windows 11",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "metanet-client-macos",
+      "family": "Metanet Client",
+      "platform": "macOS",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "metanet-explorer-android",
+      "family": "Metanet Explorer",
+      "platform": "Android",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "metanet-explorer-ios",
+      "family": "Metanet Explorer",
+      "platform": "iOS",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "bsv-desktop-macos",
+      "family": "BSV Desktop",
+      "platform": "macOS",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "bsv-browser-android",
+      "family": "BSV Browser",
+      "platform": "Android",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "bsv-browser-ios",
+      "family": "BSV Browser",
+      "platform": "iOS",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "peacock-platform-unpinned",
+      "family": "Peacock",
+      "platform": "unqualified",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "yours-chromium",
+      "family": "Yours Wallet",
+      "platform": "Chromium extension",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "vela-headless",
+      "family": "Vela",
+      "platform": "OCI; UI unavailable",
+      "role": "wallet-candidate",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    },
+    {
+      "id": "handcash-external",
+      "family": "HandCash",
+      "platform": "external sender; platform unreported",
+      "role": "external-sender",
+      "blockers": [
+        "exact payment-profile artifact and configuration unadmitted",
+        "native UI and protocol capabilities unverified"
+      ]
+    }
+  ],
+  "executionBlockers": [
+    "payment UI driver and compiled application fixture unqualified",
+    "Message Box discovery, delivery, reset and fault fixtures unqualified",
+    "independent transaction, funding ancestry and spendability oracle required",
+    "whole-process egress closure and per-repetition clean state required"
+  ],
+  "journeys": [
+    {
+      "id": "PAY-01",
+      "surface": "wallet-native-and-peerpay",
+      "actors": "ordered-pair",
+      "title": "Send to an identity key, receive, accept and spend",
+      "variants": [
+        "native-to-native",
+        "native-to-peerpay",
+        "peerpay-to-native",
+        "peerpay-to-peerpay"
+      ],
+      "steps": [
+        "Start two independent funded fixture identities; verify receiving host advertisement and inbox",
+        "Enter recipient identity and integer amount; confirm through ordinary sender UI",
+        "Receive with live listener and explicit refresh; accept through receiver UI",
+        "Restart both applications and spend the received output"
+      ],
+      "oracles": [
+        "Correct BRC-29 output, derivation metadata, exact amount and recipient",
+        "Durable delivery, receiver read-back and one internalization precede inbox acknowledgment",
+        "Controlled chain accepts a receiver spend; debits, credits, change and fees conserve value",
+        "Both UIs distinguish sent, delivered, pending and received; same-wallet cells still use separate identities"
+      ]
+    },
+    {
+      "id": "PAY-02",
+      "surface": "wallet-native-and-peerpay",
+      "actors": "ordered-pair",
+      "title": "Recipient offline and returning-user inbox recovery",
+      "variants": [
+        "offline-before-send",
+        "restart-before-refresh"
+      ],
+      "steps": [
+        "Send while receiver listener is offline",
+        "Restart receiver; open Receive and explicitly refresh",
+        "Accept once and restart again"
+      ],
+      "oracles": [
+        "Stored payment survives absence of live listener",
+        "Received once with unchanged outpoint and metadata",
+        "No acknowledged message disappears before durable internalization"
+      ]
+    },
+    {
+      "id": "PAY-03",
+      "surface": "wallet-native-and-peerpay",
+      "actors": "ordered-pair",
+      "title": "Discovery and host anointment failures",
+      "variants": [
+        "missing-advertisement",
+        "wrong-host",
+        "stale-advertisement",
+        "invalid-host-authorization"
+      ],
+      "steps": [
+        "Pin the actual discovery protocol and host advertisement used by each artifact",
+        "Inject the nominated routing failure and attempt a payment",
+        "Repair discovery through supported UI; retry the original pending payment"
+      ],
+      "oracles": [
+        "No unsupported discovery result is treated as validated recipient reachability",
+        "No false delivery success or silently discarded payment",
+        "If already created, signed bytes and remittance metadata remain durably recoverable",
+        "Unsupported host repair or resend remains BLOCKED; no automatic sender reclaim is inferred"
+      ]
+    },
+    {
+      "id": "PAY-04",
+      "surface": "wallet-native-and-peerpay",
+      "actors": "ordered-pair",
+      "title": "Transport fallback, ambiguous acknowledgment and duplicate delivery",
+      "variants": [
+        "websocket-down-http-up",
+        "store-then-drop-ack",
+        "both-transports-down",
+        "duplicate-after-restart"
+      ],
+      "steps": [
+        "Inject transport failure before or after durable server storage",
+        "Retry or fall back to the declared transport; restart both sides",
+        "Deliver the original message twice and accept through ordinary UI"
+      ],
+      "oracles": [
+        "Fallback and retries reuse one payment transaction and derivation metadata",
+        "One recipient credit and no repeated sender funding debit",
+        "No sent or delivered success without its declared evidence; pending outbox remains recoverable",
+        "Server durable storage and wallet internalization are distinct observations"
+      ]
+    },
+    {
+      "id": "PAY-05",
+      "surface": "peerpay",
+      "actors": "ordered-pair",
+      "title": "Portable payment bytes in both directions",
+      "variants": [
+        "number-array-direct",
+        "uint8array-direct",
+        "numeric-object-direct",
+        "number-array-signable",
+        "uint8array-signable",
+        "numeric-object-signable",
+        "legacy-beef"
+      ],
+      "steps": [
+        "Freeze exact transaction and dependency bytes at the supported wallet boundary",
+        "Send and receive through the real application and declared bridge",
+        "Compare recovered subject and dependency closure; spend received output"
+      ],
+      "oracles": [
+        "Byte values, output index, sender and derivation metadata survive transport",
+        "Legacy BEEF conversion preserves subject and necessary ancestry",
+        "Malformed or sparse representations fail before internalization and keep a recoverable row"
+      ]
+    },
+    {
+      "id": "PAY-06",
+      "surface": "peerpay",
+      "actors": "single-wallet",
+      "title": "Decline, cancellation, rejection and partial bulk acceptance",
+      "variants": [
+        "deny-wallet-prompt",
+        "cancel-before-sign",
+        "failed-internalization",
+        "mixed-bulk",
+        "reject-tiny",
+        "reject-refundable"
+      ],
+      "steps": [
+        "Seed declared pending payments and required failure responses",
+        "Approve or deny the named UI action; execute mixed bulk acceptance",
+        "Reload and inspect every failed, accepted and rejected row"
+      ],
+      "oracles": [
+        "Permission denial differs from timeout or infrastructure failure",
+        "Failed acceptance keeps the payment and recovery metadata",
+        "Refund never draws unrelated wallet funds after failed acceptance",
+        "Tiny rejection policy and refund fees are disclosed; acknowledgment alone is not a refund"
+      ]
+    },
+    {
+      "id": "PAY-07",
+      "surface": "peerpay-uri",
+      "actors": "single-wallet",
+      "title": "Open identity-key requests safely",
+      "variants": [
+        "typed-key",
+        "peerpay-uri",
+        "qr-request",
+        "invalid-key-or-amount",
+        "repeated-user-confirmation"
+      ],
+      "steps": [
+        "Open each supported entry path in its native OS and wallet",
+        "Inspect identity, amount and confirmation; cancel then deliberately confirm a fresh request"
+      ],
+      "oracles": [
+        "BRC-125 parsing, integer handling and explicit confirmation match the frozen standard",
+        "No broadcast before confirmation",
+        "Transport retries deduplicate one payment intent; separately confirmed payments remain independent",
+        "Camera, URI handler and clipboard claims require their actual native interfaces"
+      ]
+    },
+    {
+      "id": "MNT-01",
+      "surface": "mountaintops",
+      "actors": "single-wallet",
+      "title": "New and returning receive views",
+      "variants": [
+        "fresh-wallet",
+        "returning-wallet",
+        "free-address-switch"
+      ],
+      "steps": [
+        "Connect through ordinary wallet permissions; create or restore saved addresses",
+        "Select a saved eligible address, refresh and reconnect",
+        "Compare wallet actions and payments before and after free selection"
+      ],
+      "oracles": [
+        "Saved selection creates no paid action; reconnect default follows declared policy",
+        "All retained addresses and known payments recover without application browser data",
+        "Unchecked or failed discovery is not displayed as a verified zero balance"
+      ]
+    },
+    {
+      "id": "MNT-02",
+      "surface": "mountaintops",
+      "actors": "single-wallet",
+      "title": "Deposit, detect, import and spend",
+      "variants": [
+        "empty-wallet-deposit-funded-import",
+        "returning-wallet-import",
+        "payment-to-earlier-address"
+      ],
+      "steps": [
+        "Deposit controlled funds to the intended saved address",
+        "Refresh and verify exact known output; select Move to wallet",
+        "Observe unsigned preparation, withheld signing, one explicit submission and receiver spend"
+      ],
+      "oracles": [
+        "Exact deposit ownership, amount, input spend state and canonical proof verified",
+        "Import uses the requested deposit without optional stale migration inputs",
+        "Both UIs and wallet state agree on credit, fees and spent deposit",
+        "Reload never resurrects an imported output as spendable"
+      ]
+    },
+    {
+      "id": "MNT-03",
+      "surface": "mountaintops",
+      "actors": "single-wallet",
+      "title": "Expired address and device-independent recovery",
+      "variants": [
+        "expired-receive-address",
+        "clear-app-data",
+        "restore-wallet-on-clean-device",
+        "partial-discovery-failure"
+      ],
+      "steps": [
+        "Preserve wallet state while clearing only application state or restoring on another clean device",
+        "Restore known pre-sunset coins and eligible addresses",
+        "Attempt receiving on an expired address and inject one discovery failure"
+      ],
+      "oracles": [
+        "Expired new receiving stays blocked while retained historical funds remain accessible",
+        "No backend, browser cache or original-device dependency replaces wallet recovery",
+        "Known-output recovery preserves proof and metadata; partial failure retains restored rows"
+      ]
+    },
+    {
+      "id": "MNT-04",
+      "surface": "mountaintops",
+      "actors": "single-wallet",
+      "title": "Spent inputs, interrupted signing and unknown submission",
+      "variants": [
+        "spent-requested-input",
+        "spent-added-fee-input",
+        "exit-after-sign-before-submit",
+        "submit-then-drop-response",
+        "stale-or-missing-header"
+      ],
+      "steps": [
+        "Inject the named input, process or chain-evidence fault",
+        "Attempt import or send; restart application and wallet",
+        "Recover the original action before any replacement payment"
+      ],
+      "oracles": [
+        "Unknown input or header state blocks the action and never becomes zero funds",
+        "Two input checks, unchanged signed template and noSend signing protect one explicit submission",
+        "Uncertain submission blocks another spend until exact outcome reconciliation",
+        "Interrupted action, wallet metadata and original funds remain inspectable"
+      ]
+    }
+  ]
+}

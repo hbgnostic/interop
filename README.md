@@ -49,6 +49,10 @@ npm run test:synthesis
 
 Wallet and native execution additionally require the selected profile's binaries, prepared environment and controlled services. Follow the [wallet execution instructions](docs/operator-quickstart.md#wallet-execution) and [laboratory infrastructure guide](infra/README.md). Infrastructure qualification, the synthesis reference profile and a SUT result retain their distinct claims; [implementation status](docs/implementation-status.md) identifies the current coverage.
 
+[Payment journeys](docs/payment-journeys.md) add pinned PeerPay and Mountaintops
+source regressions and a proposed native send/receive coverage matrix. Native
+payment outcomes require separate execution and evidence.
+
 ## Documentation and repository map
 
 - [Conformance model](docs/conformance-model.md), [determinism](docs/determinism.md), and [evidence policy](docs/evidence.md) define evaluation and reporting.
