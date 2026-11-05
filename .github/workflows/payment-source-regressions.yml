@@ -1,0 +1,69 @@
+name: Payment source regressions
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/payment-source-regressions.yml'
+      - 'infra/payments/**'
+      - 'infra/plans/isi4-*-source-regressions.json'
+      - 'src/payment-source-results.mjs'
+      - 'src/component-qualification.mjs'
+      - 'src/json.mjs'
+      - 'schemas/component-qualification-plan.schema.json'
+      - 'bin/tpnil.mjs'
+      - '.nvmrc'
+  pull_request:
+    paths:
+      - '.github/workflows/payment-source-regressions.yml'
+      - 'infra/payments/**'
+      - 'infra/plans/isi4-*-source-regressions.json'
+      - 'src/payment-source-results.mjs'
+      - 'src/component-qualification.mjs'
+      - 'src/json.mjs'
+      - 'schemas/component-qualification-plan.schema.json'
+      - 'bin/tpnil.mjs'
+      - '.nvmrc'
+permissions:
+  contents: read
+jobs:
+  pinned-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lane: peerpay
+            revision: bbb51f392be985e63780ff3ae1977b86cbf08f6c
+          - lane: mountaintops
+            revision: 73516ccc7e39b2451784167ae21c6979aceb8c66
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: '.nvmrc'
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          repository: p2ppsr/${{ matrix.lane }}
+          ref: ${{ matrix.revision }}
+          path: out/payment-source
+          persist-credentials: false
+      - name: Bind source origin and verify the source tests twice
+        env:
+          PAYMENT_LANE: ${{ matrix.lane }}
+        run: |
+          git -C out/payment-source remote set-url origin "https://github.com/p2ppsr/${PAYMENT_LANE}.git"
+          for repetition in 1 2; do
+            node bin/tpnil.mjs run-component-qualification "infra/plans/isi4-${PAYMENT_LANE}-source-regressions.json" out/payment-source "out/payment-evidence/repetition-${repetition}" "github-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+            node bin/tpnil.mjs verify-component-qualification "out/payment-evidence/repetition-${repetition}"
+          done
+      - name: Retain every completed or failed source attempt
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: payment-source-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/payment-evidence
+          if-no-files-found: warn
+          retention-days: 90
