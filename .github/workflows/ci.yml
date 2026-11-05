@@ -21,6 +21,7 @@ jobs:
       - run: npm run check
       - run: npm run qualify:standards
       - run: npm ci --prefix synthesis --ignore-scripts
+      - run: npm audit --prefix synthesis --audit-level=moderate
       - run: npm run typecheck --prefix synthesis
       - run: npm test --prefix synthesis
       - run: node scripts/verify-published-journals.mjs
