@@ -1,6 +1,6 @@
 # Vela 0.1.0 vendor candidate
 
-Status: **vendor-submitted candidate; intake review not started**.
+Status: **vendor-submitted candidate; registered; technical intake open**.
 
 Vela is a BRC-100 wallet that runs as a local service in a single OCI image. The wallet answers the
 BRC-100 HTTP interface on port 3321, and a dashboard on port 3400 manages app access, spending budgets
@@ -13,14 +13,18 @@ version 2.2.0 in the pull request that added this record. The submission is the 
 the source repository is not public. Vendor documentation is in
 [vela-0.1.0-README.md](vela-0.1.0-README.md).
 
+The [retained acceptance](../../journals/submission-acceptance/2026-11-04/vela-0.1.0/acceptance.json)
+binds the original [PR14 submission](https://github.com/p2ppsr/interop/pull/14), its image-index digest
+and the exact accepted terms.
+
 ## Artifact
 
 | Field | Value |
 | --- | --- |
 | Image | `ghcr.io/hbgnostic/vela-wallet:0.1.0-ff2dbe1` (public) |
 | Image index | `sha256:b62bef87363ca58ae1f7add6bc43d7e22a55f2aaccfa5ca0b085e9628495c47b` |
-| linux/amd64 manifest | `sha256:7ad4a6961f6060a7752275344e51f9c9d34f6d206a23cf0bc7a345bbc10c98a6` |
-| linux/arm64 manifest | `sha256:0cda398395696e4fff4d67cdc79a9712ca326308a02fb29a1a5a5b2f382c55c5` |
+| linux/amd64 manifest | `sha256:e15e2e432b23b5fb464d8d148d45c7183ba11e90d34f6b0f3f7a558102a9c322` |
+| linux/arm64 manifest | `sha256:7ad4a6961f6060a7752275344e51f9c9d34f6d206a23cf0bc7a345bbc10c98a6` |
 | Wallet libraries | `@bsv/sdk` 4.0.1, `@bsv/wallet-toolbox` 2.15.1 |
 | Base image | `node:22-slim` (Debian) |
 
@@ -28,6 +32,14 @@ The image bundles 298 npm packages: 286 under permissive licenses (MIT, ISC, BSD
 BSD-3-Clause, Apache-2.0, BlueOak-1.0.0) and 12 under the Open BSV License (`@bsv/*` packages under
 version 6, `@bopen-io/templates` under version 4). Debian base-image packages carry their own
 licenses.
+
+Registry metadata was read anonymously on November 4, 2026 (Pacific time). The index and selected
+manifests match their SHA-256 identities; the image configuration blobs independently identify
+the same architectures. The [verification record](../../journals/submission-acceptance/2026-11-04/vela-0.1.0/registry-verification.json)
+retains the scope. Image layers, signatures, dependency licenses and runtime behavior remain
+unverified. The initial platform-label mismatch is preserved in
+[the correction record](../../journals/submission-acceptance/2026-11-04/vela-0.1.0/original-platform-failure.json).
+Laboratory execution must select this index or the selected platform digest, rather than `latest`.
 
 ## Configuration and initialization
 
@@ -93,6 +105,9 @@ vendor observations, not laboratory results.
 
 ## Admission
 
-Not admitted. Intake review under the [production SUT intake process](../../docs/intake.md) has not
-started: artifact identity, service boundary, initial state and observation coverage are unrecorded.
-No execution lane yet covers a container that serves the BRC-100 HTTP interface on port 3321.
+Not admitted. Candidate registration verifies registry metadata and retains submission acceptance.
+The [production SUT intake process](../../docs/intake.md) still requires artifact layers, dependency
+and permission review, service boundaries, isolated initial state, observation coverage, clean reset
+and repeated runtime evidence. The generic HTTP driver is an engineering tool; it does not establish
+an admitted OCI lane or implement Vela's app-access and budget lifecycle. No Vela laboratory result
+has been recorded.

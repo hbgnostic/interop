@@ -13,3 +13,6 @@ The current BSV Desktop intake is [v2.8.5](intake/bsv-desktop-2.8.5.json), evalu
 [Yours Wallet 5.1.0](intake/yours-wallet-5.1.0.md) has two retained experimental repetitions. [Metanet Explorer 1.1.10](intake/metanet-explorer-1.1.10-android.md) has an exact-AAB Android intake and four controlled-WAB runs that reached transaction submission; the native response and task-visibility boundary remains unresolved. [BSV Browser 1.6.1](candidates/bsv-browser-1.6.1-source-candidate.md) has a retained source-candidate observation and remains outside production SUT admission until a publisher binary is available.
 
 New reviews use intake version 2.0.0 and record redistribution, result-publication and participation-publicity permissions separately. Archived version 1.0.0 records are retained evidence, not acceptance of the current [submission terms](../legal/ARTIFACT-SUBMISSION-AGREEMENT.md). Public availability and an executed evaluation do not establish vendor participation or additional hosting rights.
+
+[Vela 0.1.0](candidates/vela-0.1.0.md) is a vendor-submitted OCI candidate with retained submission
+acceptance and verified registry metadata. Its technical intake and runtime qualification remain open.

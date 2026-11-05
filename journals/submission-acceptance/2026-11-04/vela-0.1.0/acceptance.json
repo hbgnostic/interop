@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "VENDOR_SUBMISSION_ACCEPTANCE",
+  "statementDate": "2026-11-04",
+  "rightsHolder": "Bridget Doran",
+  "representative": "Bridget Doran (@hbgnostic)",
+  "authorityBasis": "The publisher identifies Vela as her wallet and expressly accepts the terms in the pull-request submission.",
+  "source": {
+    "kind": "GitHub pull-request description",
+    "url": "https://github.com/p2ppsr/interop/pull/14",
+    "originalHead": "5a534299632c2ab2febec101da65270ed23ad18f",
+    "retainedPath": "submission-pr14.md"
+  },
+  "statementVerbatim": "I, Bridget Doran, accept the TPNIL vendor submission terms version 2.2.0 for this artifact, identified by the image index digest above.",
+  "agreement": {
+    "version": "2.2.0",
+    "path": "journals/submission-acceptance/2026-11-04/vela-0.1.0/submission-terms-2.2.0.md",
+    "sha256": "4eb05b090fe382a1c53af727d189328351552552a4bf140e2056be629b9fa349"
+  },
+  "artifact": {
+    "reference": "ghcr.io/hbgnostic/vela-wallet:0.1.0-ff2dbe1",
+    "indexDigest": "sha256:b62bef87363ca58ae1f7add6bc43d7e22a55f2aaccfa5ca0b085e9628495c47b"
+  },
+  "scope": {
+    "futureReleasesIncluded": false,
+    "sourceDisclosureRequired": false,
+    "technicalAdmissionEstablished": false,
+    "thirdPartyLicensesChanged": false
+  },
+  "representationLimits": [
+    "Records express publisher acceptance; no independent identity or legal-authority opinion.",
+    "Registry metadata verification does not establish layer retention, dependency closure, license sufficiency, runtime fidelity or qualification.",
+    "Publisher documentation remains vendor submission material under the retained terms."
+  ]
+}

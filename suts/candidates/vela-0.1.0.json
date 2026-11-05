@@ -8,7 +8,7 @@
     "name": "Bridget Doran",
     "github": "hbgnostic",
     "submissionTerms": "legal/ARTIFACT-SUBMISSION-AGREEMENT.md@2.2.0",
-    "acceptance": "Pull request adding this record"
+    "acceptance": "journals/submission-acceptance/2026-11-04/vela-0.1.0/acceptance.json"
   },
   "artifact": {
     "kind": "oci-image",
@@ -16,8 +16,8 @@
     "visibility": "public",
     "indexDigest": "sha256:b62bef87363ca58ae1f7add6bc43d7e22a55f2aaccfa5ca0b085e9628495c47b",
     "platforms": [
-      { "platform": "linux/amd64", "manifestDigest": "sha256:7ad4a6961f6060a7752275344e51f9c9d34f6d206a23cf0bc7a345bbc10c98a6" },
-      { "platform": "linux/arm64", "manifestDigest": "sha256:0cda398395696e4fff4d67cdc79a9712ca326308a02fb29a1a5a5b2f382c55c5" }
+      { "platform": "linux/amd64", "manifestDigest": "sha256:e15e2e432b23b5fb464d8d148d45c7183ba11e90d34f6b0f3f7a558102a9c322" },
+      { "platform": "linux/arm64", "manifestDigest": "sha256:7ad4a6961f6060a7752275344e51f9c9d34f6d206a23cf0bc7a345bbc10c98a6" }
     ],
     "source": "not public",
     "walletLibraries": { "@bsv/sdk": "4.0.1", "@bsv/wallet-toolbox": "2.15.1" },
@@ -57,6 +57,6 @@
   ],
   "admission": {
     "status": "not-admitted",
-    "reason": "Intake review under docs/intake.md has not started; no execution lane yet covers a container serving the BRC-100 HTTP interface on port 3321."
+    "reason": "Candidate registration and immutable registry metadata verification are complete. Technical intake under docs/intake.md remains open; no admitted execution lane yet covers this container's HTTP interface, permission lifecycle, clean reset and network closure."
   }
 }

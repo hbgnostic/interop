@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-11-05T01:59:42.505191+00:00",
+  "artifact": "ghcr.io/hbgnostic/vela-wallet",
+  "indexDigest": "sha256:b62bef87363ca58ae1f7add6bc43d7e22a55f2aaccfa5ca0b085e9628495c47b",
+  "publicManifestReadVerified": true,
+  "platforms": [
+    {
+      "platform": "linux/amd64",
+      "digest": "sha256:e15e2e432b23b5fb464d8d148d45c7183ba11e90d34f6b0f3f7a558102a9c322",
+      "manifestSize": 2383,
+      "configDigest": "sha256:ea93233f41c8c96249c8b1a947e209de8410845f731b3a5981fb2af283086b20",
+      "configPlatformVerified": true,
+      "layers": 11,
+      "layerBytes": 130979991
+    },
+    {
+      "platform": "linux/arm64",
+      "digest": "sha256:7ad4a6961f6060a7752275344e51f9c9d34f6d206a23cf0bc7a345bbc10c98a6",
+      "manifestSize": 2383,
+      "configDigest": "sha256:d1f5b71fc59af8d7aa2291d58a6ae9a53c647e3ae7597e54d200a11b5c5c8302",
+      "configPlatformVerified": true,
+      "layers": 11,
+      "layerBytes": 130835889
+    }
+  ],
+  "scope": "Index, selected image manifests and configuration blobs only; layers, signatures, installation and qualification not verified."
+}
