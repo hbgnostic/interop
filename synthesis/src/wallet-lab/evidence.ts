@@ -49,7 +49,7 @@ export class EvidenceBundle {
     this.files.set(name, Uint8Array.from(value))
   }
 
-  write(result: Omit<WalletLabResult, 'evidence'>): WalletLabResult {
+  flush(): WalletLabResult['evidence'] {
     fs.mkdirSync(this.directory, { recursive: true })
     const evidence = [...this.files.entries()]
       .sort(([left], [right]) => left.localeCompare(right))
@@ -59,7 +59,11 @@ export class EvidenceBundle {
         fs.writeFileSync(destination, bytes)
         return { name, sha256: sha256Hex(bytes), size: bytes.length }
       })
-    const complete: WalletLabResult = { ...result, evidence }
+    return evidence
+  }
+
+  write(result: Omit<WalletLabResult, 'evidence'>): WalletLabResult {
+    const complete: WalletLabResult = { ...result, evidence: this.flush() }
     fs.writeFileSync(path.join(this.directory, 'record.json'), `${canonicalJson(complete)}\n`)
     return complete
   }
@@ -69,7 +73,7 @@ export function verifyEvidenceBundle(directory: string): WalletLabResult {
   const recordPath = path.join(directory, 'record.json')
   const parsed = JSON.parse(fs.readFileSync(recordPath, 'utf8')) as WalletLabResult
   if (parsed.schema !== 'tpnil-isi4-wallet-run@1.0.0') throw new Error('Unsupported wallet-run evidence schema')
-  if (parsed.claim !== 'EXPERIMENTAL_CONFORMANCE_RESULT' || parsed.program !== 'ISI-4@1.0.0' || parsed.itcve !== 'ITCVE-1@1.0.0')
+  if (!['EXPERIMENTAL_CONFORMANCE_RESULT', 'ENGINEERING_OBSERVATION_ONLY'].includes(parsed.claim) || parsed.program !== 'ISI-4@1.0.0' || parsed.itcve !== 'ITCVE-1@1.0.0')
     throw new Error('Unexpected wallet-run claim or program boundary')
   if (!Array.isArray(parsed.vectors) || parsed.vectors.length !== 8)
     throw new Error('A wallet run must score all eight vectors')
@@ -116,7 +120,7 @@ interface WalletRunSeries {
 export function verifyWalletRunSeries(directory: string): { results: WalletLabResult[]; repetitionMatch: boolean } {
   const series = JSON.parse(fs.readFileSync(path.join(directory, 'series.json'), 'utf8')) as WalletRunSeries
   if (series.schema !== 'tpnil-isi4-wallet-run-series@1.0.0' ||
-      series.claim !== 'EXPERIMENTAL_CONFORMANCE_RESULT' || series.program !== 'ISI-4@1.0.0')
+      !['EXPERIMENTAL_CONFORMANCE_RESULT', 'ENGINEERING_OBSERVATION_ONLY'].includes(series.claim) || series.program !== 'ISI-4@1.0.0')
     throw new Error('Unexpected wallet-run series boundary')
   const entries = fs.readdirSync(directory, { withFileTypes: true })
     .filter(entry => entry.isDirectory() && entry.name.startsWith('repetition-'))
@@ -125,6 +129,7 @@ export function verifyWalletRunSeries(directory: string): { results: WalletLabRe
   if (entries.length < 2 || entries.length !== series.repetitions.length)
     throw new Error('Wallet-run series repetition set differs from the record')
   const results = entries.map(name => verifyEvidenceBundle(path.join(directory, name)))
+  if (results.some(result => result.claim !== series.claim)) throw new Error('Wallet-run series mixes claim boundaries')
   const declared = series.repetitions.map(item => item.runId)
   if (canonicalJson(declared) !== canonicalJson(entries)) throw new Error('Wallet-run series order or identifiers differ')
   for (let index = 0; index < entries.length; index += 1) {

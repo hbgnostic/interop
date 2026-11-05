@@ -20,7 +20,7 @@ describe('wallet laboratory evidence', () => {
       bundle.addJson('observation.json', { status: 'observed', password: 'fixture-secret' })
       const record = bundle.write({
         schema: 'tpnil-isi4-wallet-run@1.0.0',
-        claim: 'EXPERIMENTAL_CONFORMANCE_RESULT',
+        claim: 'ENGINEERING_OBSERVATION_ONLY',
         program: 'ISI-4@1.0.0',
         itcve: 'ITCVE-1@1.0.0',
         profile: 'production-wallet-todo-controlled-services',
@@ -58,6 +58,7 @@ describe('wallet laboratory evidence', () => {
       })
       expect(record.evidence).toHaveLength(1)
       expect(verifyEvidenceBundle(directory).runId).toBe('unit-test')
+      expect(verifyEvidenceBundle(directory).claim).toBe('ENGINEERING_OBSERVATION_ONLY')
       expect(fs.readFileSync(path.join(directory, 'evidence', 'observation.json'), 'utf8')).not.toContain('fixture-secret')
       fs.appendFileSync(path.join(directory, 'evidence', 'observation.json'), 'tamper')
       expect(() => verifyEvidenceBundle(directory)).toThrow(/mismatch/)
@@ -89,6 +90,11 @@ describe('wallet laboratory evidence', () => {
       }
       fs.writeFileSync(path.join(directory, 'series.json'), `${JSON.stringify({ schema: 'tpnil-isi4-wallet-run-series@1.0.0', claim: 'EXPERIMENTAL_CONFORMANCE_RESULT', program: 'ISI-4@1.0.0', repetitions: records, repetitionMatch: true, semanticProjection: { result: 'same' }, outcome: 'BLOCKED' })}\n`)
       expect(verifyWalletRunSeries(directory).repetitionMatch).toBe(true)
+      const seriesPath = path.join(directory, 'series.json')
+      const series = JSON.parse(fs.readFileSync(seriesPath, 'utf8'))
+      fs.writeFileSync(seriesPath, JSON.stringify({ ...series, claim: 'ENGINEERING_OBSERVATION_ONLY' }))
+      expect(() => verifyWalletRunSeries(directory)).toThrow(/mixes claim boundaries/)
+      fs.writeFileSync(seriesPath, JSON.stringify(series))
       fs.writeFileSync(path.join(directory, 'repetition-1', 'evidence', 'undeclared.txt'), 'extra')
       expect(() => verifyWalletRunSeries(directory)).toThrow(/file set/)
     } finally {

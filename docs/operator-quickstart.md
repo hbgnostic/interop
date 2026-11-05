@@ -58,4 +58,43 @@ npm --prefix synthesis run wallet-lab -- verify ../out/isi4-yours-todo-controlle
 
 The runner requires two repetitions. It records failed and blocked vectors and exits nonzero only when the two semantic projections differ or the harness cannot produce verifiable evidence. The retained ToDo archive is under `fixtures/artifacts/`; the exact public Yours archive is downloaded and verified by the preparation script.
 
+### Desktop wallets on the HTTP JSON substrate
+
+The `http-desktop-wallet` driver exercises the same eight ISI-4 vectors against a desktop wallet that serves the BRC-100 HTTP JSON substrate on loopback, by default `http://localhost:3321`. It emits `ENGINEERING_OBSERVATION_ONLY` records and series. The ToDo application and the boundary fixture pages call the wallet from Chromium with an `Originator` header. Assertion identifiers, evidence names and verdict predicates follow the browser-extension driver. The method inventory of V008 counts the methods that answer an empty-argument probe with a status other than 404 or 501.
+
+The driver does not install or reset the external wallet or enforce its process-level network policy. The browser proxy and loopback hooks do not establish closure for wallet, storage or subprocess traffic. Records mark public-mainnet broadcast and undeclared egress `not-observed`. Use an isolated laboratory identity and externally enforced network closure before execution. Separate intake evidence must bind the installed artifact, establish clean wallet and service state before every repetition, and verify whole-process egress controls before a desktop profile can produce scored conformance results. A matching series alone establishes neither clean reset nor qualification.
+
+The operator installs and initializes the wallet through its ordinary interface, enables its HTTP substrate and records each changed setting in `walletConfiguration`. When `walletArchive` is present, the runner verifies it against `walletArtifact` before execution.
+
+Wallet prompts are answered in one of two declared modes:
+
+- `attended`: a person answers each prompt at the wallet. The driver prints the expected decision, waits up to `timeoutMs` for each wallet call and records its instructions in `prompt-answering.json`. It does not observe the decisions.
+- `declared-hook`: the wallet publisher documents an automation hook on loopback. The configuration names its documentation, the URL that lists pending prompts, the URL that receives a decision and, where they differ from `id`, `origin`, `kind`, `text` and `decision`, the field names it uses. The driver sends the laboratory decision of the browser-extension driver: deny the `tpnil denied permission` and `tpnil origin isolation` requests and allow the others. Every hook request and response is retained in `declared-hooks.json` and every decision in `permissions.json`.
+
+Pending prompts require an identifier, origin and decision text before any answer is sent. V005 recognizes HTTP 401/403 refusals or HTTP 400 replies describing a permission refusal; missing methods, argument errors, server failures and timeouts cannot satisfy its denial assertions.
+
+The fixture environment is either the controlled services of the Yours profile (`controlled-services`), which the wallet must reach through its supported service settings, or a declared loopback fixture hook (`declared-hook`) that pays the derived funding key, schedules accepted or rejected submission verdicts and reports submissions. A fixture hook returns the raw funding transaction with its block height, Merkle root and block transaction list. The driver builds the proof and verifies it against that supplied root before internalization; this alone does not independently authenticate a block header or establish funding ancestry. Submission observations require an exact `ACCEPTED_BY_NETWORK` or `REJECTED` verdict and a transaction id; supplied raw bytes must match that id. Hooks must be loopback URLs without credentials; redirects are rejected. Aborted attempts retain accumulated evidence and an `attempt-failure.json` file without a completed result record.
+
+```json
+{
+  "schema": "tpnil-isi4-wallet-run-config@1.0.0",
+  "driver": "http-desktop-wallet",
+  "baseDirectory": "../..",
+  "webroot": "out/sut-artifacts/todo-ts-236733c/webroot",
+  "applicationArchive": "fixtures/artifacts/todo-ts-236733c-webroot.tgz",
+  "outputDirectory": "out/isi4-http-desktop-wallet",
+  "repetitions": 2,
+  "walletArchive": "out/sut-artifacts/desktop-wallet/installer.bin",
+  "walletArtifact": { "id": "desktop-wallet", "version": "1.0.0", "sha256": "<64 hex>", "size": 0 },
+  "applicationArtifact": { "id": "todo-ts-compiled-webroot", "version": "236733c586c4d2cc3ab7f957afa382005509acd4", "sha256": "b3c41dc60ba99b497231008a15033a60110cc7cd60b2d4fffd405e33f4979ddc", "size": 502803 },
+  "expectedWalletVersion": "<exact getVersion answer>",
+  "walletUrl": "http://localhost:3321",
+  "prompts": { "mode": "attended", "timeoutMs": 300000 },
+  "fixture": { "mode": "controlled-services" },
+  "walletConfiguration": ["<each supported setting changed for the run>"]
+}
+```
+
+An operator who runs the vectors on another network declares `networkDeviation` with the network the wallet reports and the reason. The `mainnet-configuration` assertion is then `NOT_APPLICABLE` when the wallet reports the declared network, the deviation appears in the V001 limitations and the configuration, and the run is outside the mainnet profile.
+
 Android operators use `scripts/native/android/create-avd.sh`, `launch-emulator.sh`, `bundle-to-universal-apk.sh`, `capture-runtime.sh`, and the optional uiautomator2 driver. The public fixture key under `fixtures/keys/` signs laboratory derivatives and carries no publisher identity. `.github/workflows/isi4-android-qualification.yml` executes the same boundary on the owned KVM runner.

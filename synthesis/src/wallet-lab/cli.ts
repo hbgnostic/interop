@@ -3,14 +3,13 @@ import path from 'node:path'
 import { canonicalJson, sha256Hex } from '../determinism.js'
 import { verifyEvidenceBundle, verifyWalletRunSeries } from './evidence.js'
 import type { ArtifactIdentity, WalletLabResult } from './model.js'
+import { runHttpDesktopWallet, type DeclaredNetworkDeviation, type FixtureEnvironmentConfiguration } from './http-wallet-driver.js'
+import type { PromptAnswering } from './http-wallet-hooks.js'
 import { runYoursWallet } from './yours-driver.js'
 
-interface RunConfiguration {
+interface CommonConfiguration {
   schema: 'tpnil-isi4-wallet-run-config@1.0.0'
-  driver: 'yours-extension'
   baseDirectory: string
-  extensionDirectory: string
-  extensionArchive: string
   webroot: string
   applicationArchive: string
   outputDirectory: string
@@ -19,6 +18,27 @@ interface RunConfiguration {
   walletArtifact: ArtifactIdentity
   applicationArtifact: ArtifactIdentity
 }
+
+interface ExtensionConfiguration extends CommonConfiguration {
+  driver: 'yours-extension'
+  extensionDirectory: string
+  extensionArchive: string
+}
+
+interface HttpDesktopConfiguration extends CommonConfiguration {
+  driver: 'http-desktop-wallet'
+  /** The installed wallet artifact, verified against walletArtifact when present. */
+  walletArchive?: string
+  expectedWalletVersion: string
+  walletUrl?: string
+  prompts: PromptAnswering
+  fixture: FixtureEnvironmentConfiguration
+  networkDeviation?: DeclaredNetworkDeviation
+  walletConfiguration?: string[]
+  browserExecutable?: string
+}
+
+type RunConfiguration = ExtensionConfiguration | HttpDesktopConfiguration
 
 function fail(message: string): never {
   process.stderr.write(`${message}\n`)
@@ -34,13 +54,15 @@ function verifyArtifact(file: string, identity: ArtifactIdentity): void {
 
 async function run(configPath: string): Promise<void> {
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8')) as RunConfiguration
-  if (config.schema !== 'tpnil-isi4-wallet-run-config@1.0.0' || config.driver !== 'yours-extension')
+  if (config.schema !== 'tpnil-isi4-wallet-run-config@1.0.0' ||
+      (config.driver !== 'yours-extension' && config.driver !== 'http-desktop-wallet'))
     fail('Unsupported wallet-run configuration')
   if (!Number.isSafeInteger(config.repetitions) || config.repetitions < 2)
-    fail('A scored wallet run requires at least two repetitions')
+    fail('A wallet-run series requires at least two repetitions')
   const base = path.resolve(path.dirname(configPath), config.baseDirectory)
   const resolve = (value: string): string => path.resolve(base, value)
-  verifyArtifact(resolve(config.extensionArchive), config.walletArtifact)
+  if (config.driver === 'yours-extension') verifyArtifact(resolve(config.extensionArchive), config.walletArtifact)
+  else if (config.walletArchive !== undefined) verifyArtifact(resolve(config.walletArchive), config.walletArtifact)
   verifyArtifact(resolve(config.applicationArchive), config.applicationArtifact)
   const output = resolve(config.outputDirectory)
   if (fs.existsSync(output) && fs.readdirSync(output).length > 0)
@@ -48,14 +70,30 @@ async function run(configPath: string): Promise<void> {
   fs.mkdirSync(output, { recursive: true })
   const results: WalletLabResult[] = []
   for (let index = 1; index <= config.repetitions; index += 1) {
-    const result = await runYoursWallet({
-      extensionDirectory: resolve(config.extensionDirectory),
-      webroot: resolve(config.webroot),
-      outputDirectory: path.join(output, `repetition-${index}`),
-      walletArtifact: config.walletArtifact,
-      applicationArtifact: config.applicationArtifact,
-      headless: config.headless ?? true
-    })
+    const outputDirectory = path.join(output, `repetition-${index}`)
+    const result = config.driver === 'yours-extension'
+      ? await runYoursWallet({
+          extensionDirectory: resolve(config.extensionDirectory),
+          webroot: resolve(config.webroot),
+          outputDirectory,
+          walletArtifact: config.walletArtifact,
+          applicationArtifact: config.applicationArtifact,
+          headless: config.headless ?? true
+        })
+      : await runHttpDesktopWallet({
+          webroot: resolve(config.webroot),
+          outputDirectory,
+          walletArtifact: config.walletArtifact,
+          applicationArtifact: config.applicationArtifact,
+          expectedWalletVersion: config.expectedWalletVersion,
+          prompts: config.prompts,
+          fixture: config.fixture,
+          headless: config.headless ?? true,
+          ...(config.walletUrl === undefined ? {} : { walletUrl: config.walletUrl }),
+          ...(config.networkDeviation === undefined ? {} : { networkDeviation: config.networkDeviation }),
+          ...(config.walletConfiguration === undefined ? {} : { walletConfiguration: config.walletConfiguration }),
+          ...(config.browserExecutable === undefined ? {} : { browserExecutable: resolve(config.browserExecutable) })
+        })
     verifyEvidenceBundle(path.join(output, `repetition-${index}`))
     results.push(result)
   }
@@ -63,7 +101,7 @@ async function run(configPath: string): Promise<void> {
   const repetitionMatch = projections.every(projection => projection === projections[0])
   const summary = {
     schema: 'tpnil-isi4-wallet-run-series@1.0.0',
-    claim: 'EXPERIMENTAL_CONFORMANCE_RESULT',
+    claim: results[0]!.claim,
     program: 'ISI-4@1.0.0',
     repetitions: results.map(result => ({
       runId: result.runId,
